@@ -25,8 +25,10 @@ If you enjoy this lib a Twitter shout-out
 
 ## Install
 
-```
+```sh
 npm install react-zorm
+# or
+yarn add react-zorm
 ```
 
 ## Example
@@ -157,7 +159,7 @@ export let action: ActionFunction = async ({ request }) => {
 
 ### Server-side field errors
 
-The `useZorm()` hook can take in any additional `ZodIssue`s via the `customIssues` option:
+The `useZorm()` hook can take any additional `ZodIssue`s via the `customIssues` option:
 
 ```ts
 const zo = useZorm("signup", FormSchema, {
@@ -175,7 +177,7 @@ These issues can be generated anywhere. Most commonly on the server. The error
 chain will render these issues on the matching paths just like the errors coming
 from the schema.
 
-To make their generation type-safe react-zorm exports `createCustomIssues()`
+To make their generation type-safe, react-zorm exports `createCustomIssues()`
 chain to make it easy:
 
 ```ts
@@ -196,10 +198,10 @@ This code is very contrived but take a look at these examples:
 ## The Chains
 
 The chains are a way to access the form validation state in a type safe way.
-The invocation via `()` returns the chain value. On the `fields` chain the value is the `name` input attribute
+The invocation via `()` returns the chain value. On the `fields` chain, the value is the `name` input attribute
 and the `errors` chain it is the possible ZodIssue object for the field.
 
-There few other option for invoking the chain:
+There are a few other options for invoking the chain:
 
 ### `fields` invocation
 
@@ -210,7 +212,7 @@ Return values for different invocation types
 -   `(): string` - The default, same as `"name"`
 -   `(index: number): FieldChain` - Special case for setting array indices
 -   `(fn: RenderFunction): any` - Calls the function with `{name: string, id: string}` and renders the return value.
-    -   Can be used to create resuable fields. [Codesandbox example](https://codesandbox.io/s/github/esamattis/react-zorm/tree/master/packages/codesandboxes/boxes/render-function?file=/src/App.tsx).
+    -   Can be used to create reusable fields. [Codesandbox example](https://codesandbox.io/s/github/esamattis/react-zorm/tree/master/packages/codesandboxes/boxes/render-function?file=/src/App.tsx).
 
 ### `errors` invocation
 
@@ -220,13 +222,13 @@ Return values for different invocation types
 -   `(value: typeof Boolean): boolean` - Return `true` when there's an error and `false`
     when it is ok. Example `.field(Boolean)`.
 -   `<T>(render: (issue: ZodIssue) => T): T | undefined` - Invoke the passed
-    function with the `ZodIssue` and return its return value. When there's no error
+    function with the `ZodIssue` and return its return value. When there's no error,
     a `undefined` is returned. Useful for rendering error message components
 -   `(index: number): ErrorChain` - Special case for accessing array elements
 
 ## Using input values during rendering
 
-The first tool you should reach is React. Just make the input controlled with
+The first tool you should reach out to is React. Just make the input controlled with
 `useState()`. This works just fine with checkboxes, radio buttons and even with
 text inputs when the form is small. React Zorm is not really interested how the
 inputs get on the form. It just reads the `value` attributes using the
@@ -252,7 +254,7 @@ move the `useValue()` call to a subcomponent to avoid rendering the whole form
 on every input change. See the [Zorm type](#zorm-type) docs on how to do
 this.
 
-Alternatively you can use the `<Value>` wrapper which allows access to the input
+Alternatively, you can use the `<Value>` wrapper which allows access to the input
 value via render prop:
 
 ```ts
@@ -271,7 +273,7 @@ function Form() {
 }
 ```
 
-This way only the inner `<span>` element renders on the input changes.
+This way, only the inner `<span>` element renders on the input changes.
 
 Here's a
 [codesandox demonstrating](https://codesandbox.io/s/github/esamattis/react-zorm/tree/master/packages/codesandboxes/boxes/use-value?file=/src/App.tsx)
@@ -279,9 +281,9 @@ these and vizualizing the renders.
 
 ## FAQ
 
-### When Zorm validates?
+### When does Zorm validate?
 
-When the form submits and on input blurs after the first submit attempt.
+When the form submits; and on input blurs after the first submit attempt.
 
 If you want total control over this, pass in `setupListeners: false` and call
 `validate()` manually when you need. Note that now you need to manually prevent
@@ -310,27 +312,28 @@ function Signup() {
 
 ### How to handle 3rdparty components?
 
-That do not create `<input>` elements?
+That do not create `<input>` elements (or any other element having `name` and
+`value` properties)?
 
-Since Zorm just works with the native `<form>` you must sync their state to
+Since Zorm just works with the native `<form>`, you must sync their state to
 `<input type="hidden">` elements in order for them to become actually part of
 the form.
 
 Here's a [Codesandbox example](https://codesandbox.io/s/github/esamattis/react-zorm/tree/master/packages/codesandboxes/boxes/3rdparty?file=/src/App.tsx) with `react-select`.
 
-### How to validate dependent fields like password confirm?
+### How to validate dependent fields such as password change confirmations?
 
 See <https://twitter.com/esamatti/status/1488553690613039108>
 
 ### How to use checkboxes?
 
-Checkboxes can result to simple booleans or arrays of selected values. These custom Zod types can help with them. See this [usage example](https://codesandbox.io/s/github/esamattis/react-zorm/tree/master/packages/codesandboxes/boxes/checkboxes?file=/src/App.tsx).
+Checkboxes can result in simple booleans or arrays of selected values. These custom Zod types can help with them. See this [usage example](https://codesandbox.io/s/github/esamattis/react-zorm/tree/master/packages/codesandboxes/boxes/checkboxes?file=/src/App.tsx).
 
 ```ts
 const booleanCheckbox = () =>
     z
         .string()
-        // Unchecked checkbox is just missing so it must be optional
+        // Unchecked checkbox is just missing the value, so it must be optional
         .optional()
         // Transform the value to boolean
         .transform(Boolean);
@@ -345,7 +348,7 @@ const arrayCheckbox = () =>
 
 ### How to do server-side validation without Remix?
 
-If your server does not support parsing form data to the standard `FormData` you
+If your server does not support parsing form data to the standard `FormData`, you
 can post the form as JSON and just use `.parse()` from the Zod schema. See the
 next section for JSON posting.
 
@@ -368,7 +371,7 @@ const zo = useZorm("todos", FormSchema, {
 });
 ```
 
-If you need loading states [React Query][react-query] mutations can be cool:
+If you need loading states, [React Query][react-query] mutations can be cool:
 
 ```ts
 import { useMutation } from "react-query";
@@ -402,25 +405,25 @@ Tools available for importing from `"react-zorm"`
 
 ### `useZorm(formName: string, schema: ZodObject, options?: UseZormOptions): Zorm`
 
-Create a form `Validator`
+Create a form validator
 
 #### param `formName: string`
 
-The form name. This used for the input id generation so it should be unique
+The form name. This is used for input id generation so it should be a unique
 string within your forms.
 
 #### param `schema: ZodObject`
 
-Zod schema to parse the form with.
+Zod schema to parse the form against.
 
 #### param `options?: UseZormOptions`
 
 -   `onValidSubmit(event: ValidSubmitEvent): any`: Called when the form is submitted with valid data
-    -   `ValidSubmitEvent#data`: The Zod parsed form data
+    -   `ValidSubmitEvent#data`: The Zod-parsed form data
     -   `ValidSubmitEvent#target`: The form HTML Element
     -   `ValidSubmitEvent#preventDefault()`: Prevent the default form submission
--   `setupListeners: boolean`: Do not setup any listeners. Ie. `onValidSubmit` won't be
-    called nor the submission is automatically prevented. This gives total control
+-   `setupListeners: boolean`: Do not setup any listeners. I.e. neither is `onValidSubmit`
+    called nor is the submission automatically prevented. This gives total control
     when to validate the form. Set your own `onSubmit` on the form etc. Defaults to `true`.
 -   `customIssues: ZodIssue[]`: Any additional `ZodIssue` to be rendered within
     the error chain. This is commonly used to handle server-side field validation
@@ -437,7 +440,7 @@ Zod schema to parse the form with.
 
 ### `Zorm` Type
 
-The type of the object returned by `useZorm()`. This type object can be used to
+The type of the object returned by `useZorm()`. This type can be used to
 type component props if you want to split the form to multiple components and
 pass the `zorm` object around.
 

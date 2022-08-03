@@ -7,7 +7,7 @@ const FormSchema = z.object({
     hiddenInput: z.string(),
 });
 
-function Horverable(props: { onHover: () => any; children: string }) {
+function Hoverable(props: { onHover: () => any; children: string }) {
     return (
         <div className="hoverable" onMouseEnter={props.onHover}>
             {props.children}
@@ -42,20 +42,20 @@ export default function Form() {
             <h1>Hidden inputs</h1>
             {zo.fields.hiddenInput(hidden(hoverValue))}
             <div>
-                <Horverable
+                <Hoverable
                     onHover={() => {
                         setHoverValue("Left box hovered");
                     }}
                 >
                     Hover me!
-                </Horverable>
-                <Horverable
+                </Hoverable>
+                <Hoverable
                     onHover={() => {
                         setHoverValue("Right box hovered");
                     }}
                 >
                     And me!
-                </Horverable>
+                </Hoverable>
             </div>
             <button type="submit">Submit</button>
             <pre>Form result: {JSON.stringify(zo.validation, null, 2)}</pre>
